@@ -1,1 +1,1 @@
-wed :nodemon index.js
+wed :node index.js
