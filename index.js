@@ -74,6 +74,7 @@ io.on('connection', (socket) => {
     
     socket.on('disconnect', () => {
               manageUser.splice(manageUser.indexOf(socket.userName) ,1)
+      socket.broadcast.emit("server-send-listUser" , manageUser)
       console.log('user disconnected ');
     });
   });
