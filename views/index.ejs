@@ -11,7 +11,7 @@
 
     <script src="https://socketnodechat.herokuapp.com/socket.io/socket.io.js"></script>
     <script>
-        var socket = io().connect('https://socketnodechat.herokuapp.com/');
+        var socket = io().connect('https://socketnodechat.herokuapp.com');
         socket.on('news', (data) => {
             data = "long"
             console.log(data);
