@@ -1,0 +1,131 @@
+<% var n= 888 %>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io().connect('http://localhost:4000');
+        socket.on('news', (data) => {
+            data = "long"
+            console.log(data);
+            socket.emit('my other event', {
+                my: data
+            });
+        });
+    </script>
+
+
+
+    <body>
+        <div class="container">
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">YourName :</label>
+                    <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter your name" id="username">
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-login">Register</button>
+            </form>
+
+
+        </div>
+
+        <div class="container mt-3" id="homepage" style="width: 100%;">
+            <div style="float: right;" class="mb-2">
+                <span id="helloUser"></span>
+                <button type="button" class="btn btn-danger btn-sm" id="btn-logout">Logout</button>
+            </div>
+            <div class="row" style="width: 100%;">
+                <div class="card " style="width: 80%;">
+                    <div class="" style="height: 600px;" id="message">
+                    </div>
+                    <form>
+                        <div id="typing" class="ml-2"></div>
+                        <div class="d-flex">
+                            <input type="text" class="form-control " id="message-text" aria-describedby="emailHelp" placeholder="Enter your message">
+                            <button type="submit" class="btn btn-primary" style="width: 100px;" id="btn-send-message">Send</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="card p-3" style="width: 20%;" id="listUser">
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        $("#login-form").show()
+        $("#homepage").hide()
+        $("#btn-login").click(function(e) {
+            e.preventDefault();
+            socket.emit("client-send-username", $("#username").val())
+        })
+
+        $("#btn-logout").click(function() {
+            $("#login-form").show()
+            $("#homepage").hide()
+            socket.emit("logout", socket.userName)
+        })
+
+        $("#btn-send-message").click(function(e) {
+            e.preventDefault();
+            socket.emit("client-send-message", $("#message-text").val())
+            $("#message-text").val("")
+        })
+
+        $("#message-text").focusin(function() {
+            socket.emit("someone-typing")
+        })
+
+        $("#message-text").focusout(function() {
+            socket.emit("someone-stop-typing")
+        })
+
+        socket.on("server-send-message", function(data) {
+            $("#message").append("<div>" + data.userName + ":  " + data.message + "</div>")
+        })
+
+        socket.on("server-send-register-false", function() {
+            alert("Your name has already exist")
+        })
+
+        socket.on("server-send-someone-typing", function(data) {
+            console.log(data)
+            $("#typing").html(data + " is typing ... ")
+        })
+
+        socket.on("server-send-someone-stop-typing", function() {
+            $("#typing").html("")
+        })
+
+        socket.on("server-send-register-success", function(data) {
+            alert("You have register successfully")
+            $("#helloUser").html(data)
+            $("#login-form").hide()
+            $("#homepage").show()
+        })
+
+        socket.on("server-send-listUser", function(data) {
+            let listUser = data.map((user) => {
+                return `<div class="card mb-2 p-1">${user}</div>`
+            })
+
+            $("#listUser").html(listUser)
+        });
+    </script>
+
+    </html>
