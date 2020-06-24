@@ -94,9 +94,9 @@
         $("#message-text").focusout(function() {
             socket.emit("someone-stop-typing")
         })
-
+        let image = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/1200px-User_icon_2.svg.png"
         socket.on("server-send-message", function(data) {
-            $("#message").append("<div>" + data.userName + ":  " + data.message + "</div>")
+            $("#message").append("<div>" + "<img  style=" + "width:" + 25 + "px" + " src=" + image + ' " ' + "/>" + data.userName + ":  " + data.message + "</div>")
         })
 
         socket.on("server-send-register-false", function() {
