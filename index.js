@@ -3,7 +3,7 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-const port = 4000 || process.env.PORT
+const port = 5698 || process.env.PORT
 
 app.set("view engine" , "ejs")
 app.set("views" ,"./views")
