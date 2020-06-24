@@ -1,1 +1,1 @@
-node index.js
+wed :npm start
