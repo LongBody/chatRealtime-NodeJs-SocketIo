@@ -1,1 +1,1 @@
-wed :npm start
+wed :nodemon index.js
