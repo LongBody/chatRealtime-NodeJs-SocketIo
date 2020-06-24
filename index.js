@@ -73,6 +73,7 @@ io.on('connection', (socket) => {
     
     
     socket.on('disconnect', () => {
+              manageUser.splice(manageUser.indexOf(socket.userName) ,1)
       console.log('user disconnected ');
     });
   });
